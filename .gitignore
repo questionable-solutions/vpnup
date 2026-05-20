@@ -24,6 +24,8 @@ __pycache__/
 dist/
 build/
 
+# tests
+.coverage
 
 # dev
 dev/
