@@ -1,0 +1,29 @@
+
+# ide
+.vscode/
+.idea/
+
+
+# env
+.env
+venv/
+.venv/
+
+# runtime artifacts
+setup.log
+docker-compose.override.yml
+*.swp
+*.swo
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+*.egg-info/
+dist/
+build/
+
+
+# dev
+dev/
