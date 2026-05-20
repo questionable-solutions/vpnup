@@ -1,0 +1,36 @@
+# vpnUP — VLESS + Reality Protocol Override
+# Image: ghcr.io/azumi67/3x-ui:latest  (Xray-core + 3x-ui management panel)
+#
+# The 3x-ui panel manages Xray configs via its Web UI. Reality keys and
+# inbound settings are configured through the panel on first access.
+
+services:
+  vless-reality:
+    image: ghcr.io/azumi67/3x-ui:latest
+    container_name: vpnup-vless
+    restart: unless-stopped
+    environment:
+      # 3x-ui panel credentials are configured on first Web UI access.
+      # Some image variants support injecting admin creds via these env vars:
+      XUI_USERNAME: "${ADMIN_USERNAME:-admin}"
+      XUI_PASSWORD: "${ADMIN_PASSWORD}"
+    volumes:
+      - "./vless-data/db:/etc/x-ui"
+      - "./vless-data/cert:/root/cert"
+      - "./vless-data/config.json:/etc/x-ui/config.json:ro"
+    ports:
+      - "${XUI_PORT:-2053}:2053/tcp"       # 3x-ui management panel
+      - "${VLESS_PORT:-443}:443/tcp"        # VLESS + Reality inbound
+    networks:
+      - vpn-net
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:2053"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: "512M"
