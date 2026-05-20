@@ -1,0 +1,47 @@
+# vpnUP — WireGuard Protocol Override
+# Image: ghcr.io/wg-easy/wg-easy:14  (actively maintained, built-in Web UI)
+#
+# TRADE-OFF: WireGuard requires NET_ADMIN and SYS_MODULE capabilities.
+# This is inherent to kernel WireGuard and cannot be avoided without
+# switching to a userspace implementation (e.g., boringtun), which would
+# sacrifice performance and introduce a different image dependency chain.
+
+services:
+  wireguard:
+    image: ghcr.io/wg-easy/wg-easy:14
+    container_name: vpnup-wireguard
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    sysctls:
+      - net.ipv4.ip_forward=1
+      - net.ipv6.conf.all.forwarding=1
+    environment:
+      # WireGuard config — sourced from .env
+      WG_HOST: "${VPN_HOST}"
+      PASSWORD: "${ADMIN_PASSWORD}"
+      WG_PORT: "${WG_PORT:-51820}"
+      WG_DEFAULT_DNS: "${WG_DEFAULT_DNS:-1.1.1.1,1.0.0.1}"
+      WG_ALLOWED_IPS: "${WG_ALLOWED_IPS:-0.0.0.0/0}"
+      WG_MTU: "${WG_MTU:-1420}"
+      # Web UI runs internally on 51821; mapped to WG_UI_PORT
+      UI_PORT: "51821"
+    volumes:
+      - "./wireguard-data:/etc/wireguard"
+    ports:
+      - "${WG_UI_PORT:-51821}:51821/tcp"   # Management Web UI
+      - "${WG_PORT:-51820}:51820/udp"       # WireGuard tunnel
+    networks:
+      - vpn-net
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:51821"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "256M"
