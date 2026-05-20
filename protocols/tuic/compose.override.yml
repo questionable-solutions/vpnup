@@ -1,0 +1,30 @@
+# vpnUP — TUIC Protocol Override
+#
+# NOTE [VERIFY]: TUIC images with built-in management UIs are scarce.
+# This compose file targets a generic TUIC server deployment.
+# A bundled-UI image must be identified before production use.
+# Consider evaluating community panels that wrap TUIC + dashboard.
+
+services:
+  tuic:
+    image: xchacha20/tuic-server:latest
+    container_name: vpnup-tuic
+    restart: unless-stopped
+    environment:
+      TUIC_PORT: "${TUIC_PORT:-8443}"
+      TUIC_UUID: "${TUIC_UUID}"
+      TUIC_PASSWORD: "${TUIC_PASSWORD}"
+      TUIC_CERT_DOMAIN: "${TUIC_CERT_DOMAIN}"
+    volumes:
+      - "./tuic-data:/etc/tuic"
+      - "./tuic-data/certs:/etc/tuic/certs"
+    ports:
+      - "${TUIC_PORT:-8443}:8443/udp"     # TUIC QUIC tunnel
+      - "${TUIC_UI_PORT:-8080}:8080/tcp"  # Management Web UI
+    networks:
+      - vpn-net
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: "256M"
