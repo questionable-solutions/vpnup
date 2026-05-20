@@ -1,0 +1,38 @@
+{
+  "_comment": "vpnUP — VLESS + Reality Xray Inbound Template",
+  "_usage": "Import this via the 3x-ui Web UI (Inbound → Add → Import) after deployment.",
+  "_variables": {
+    "VLESS_PORT": "{{VLESS_PORT}}",
+    "REALITY_DEST": "{{REALITY_DEST}}",
+    "REALITY_SERVER_NAMES": "{{REALITY_SERVER_NAMES}}",
+    "REALITY_PRIVATE_KEY": "{{REALITY_PRIVATE_KEY}}",
+    "REALITY_SHORT_ID": "{{REALITY_SHORT_ID}}"
+  },
+  "inbounds": [
+    {
+      "tag": "vless-reality-inbound",
+      "port": "{{VLESS_PORT}}",
+      "protocol": "vless",
+      "settings": {
+        "clients": [],
+        "decryption": "none"
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "security": "reality",
+        "realitySettings": {
+          "show": false,
+          "dest": "{{REALITY_DEST}}",
+          "xver": 0,
+          "serverNames": "{{REALITY_SERVER_NAMES}}",
+          "privateKey": "{{REALITY_PRIVATE_KEY}}",
+          "shortIds": ["{{REALITY_SHORT_ID}}"]
+        }
+      },
+      "sniffing": {
+        "enabled": true,
+        "destOverride": ["http", "tls", "quic"]
+      }
+    }
+  ]
+}
