@@ -1,0 +1,31 @@
+# vpnUP — Hysteria2 Protocol Override
+# Image: toxxic/hysteria2 (official Hysteria2 binary)
+#
+# NOTE [VERIFY]: This image requires validation for built-in UI support.
+# If the image does not include a management dashboard, evaluate
+# mhsanaei/hysteria-dashboard or an equivalent bundled-UI alternative
+# before marking this protocol production-ready.
+
+services:
+  hysteria2:
+    image: toxxic/hysteria2:latest
+    container_name: vpnup-hysteria2
+    restart: unless-stopped
+    environment:
+      HYSTERIA_PORT: "${HYSTERIA_PORT:-8443}"
+      HYSTERIA_OBFS: "${HYSTERIA_OBFS}"
+      HYSTERIA_CERT_DOMAIN: "${HYSTERIA_CERT_DOMAIN}"
+      ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+    volumes:
+      - "./hysteria2-data:/etc/hysteria"
+      - "./hysteria2-data/certs:/etc/hysteria/certs"
+    ports:
+      - "${HYSTERIA_PORT:-8443}:8443/udp"   # Hysteria2 QUIC tunnel
+      - "${HYSTERIA_UI_PORT:-8080}:8080/tcp" # Management Web UI
+    networks:
+      - vpn-net
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: "512M"
