@@ -1,0 +1,29 @@
+[project]
+name = "vpnup"
+version = "1.0.0"
+description = "One-command VPN server deployment with bundled Web UI management"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+
+dependencies = [
+    "typer>=0.12,<1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.4",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "N", "W", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-v --tb=short"
