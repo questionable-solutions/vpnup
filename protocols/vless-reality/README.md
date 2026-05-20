@@ -1,5 +1,44 @@
 # VLESS + Reality via 3x-ui
 
+## Quick Start
+
+```bash
+# 1. Deploy the server
+python setup.py
+
+# Select protocol 2 (vless-reality), enter your VPS IP, accept defaults.
+# Reality keys are auto-generated. The script prints your admin password once.
+
+# 2. Open the 3x-ui management panel
+#    http://<YOUR_VPS_IP>:2053
+#    Username: admin   Password: (printed by setup.py)
+
+# 3. Create an inbound in the panel:
+#    - Go to "Inbounds" → "Add Inbound"
+#    - Protocol: vless    Port: 443 (or your custom VLESS_PORT)
+#    - Stream Settings → Security: reality
+#    - Fill in the Reality keys from your .env file:
+#      cat .env | grep REALITY
+#    - Click "Add Client" to generate a UUID
+#    - Save
+
+# 4. Share the connection:
+#    - In the inbound list, click "操作" → "QR Code" or copy the VLESS link
+#    - Send it to your client device
+
+# 5. Install a client and import the link/QR:
+#    - Windows: v2rayN (https://github.com/2dust/v2rayN)
+#    - Android: v2rayNG (Google Play)
+#    - iOS: Shadowrocket or Streisand (App Store)
+#    - macOS/Linux: Nekoray (https://github.com/MatsuriDayo/nekoray)
+```
+
+**Alternative:** Import the pre-rendered config from `./vless-reality-data/config.json` via the panel's import feature instead of manual setup in step 3.
+
+**Troubleshooting:** Run `python setup.py --verify-image` to check container health. The Reality destination (`www.microsoft.com:443` by default) must be reachable from your VPS.
+
+---
+
 ## Image
 `ghcr.io/azumi67/3x-ui:latest`
 

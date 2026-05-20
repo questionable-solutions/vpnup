@@ -1,5 +1,34 @@
 # Hysteria2
 
+## Quick Start
+
+> ⚠️ **Experimental.** The current image (`toxxic/hysteria2`) does not include a Web UI.
+> Client config must be written manually or managed via CLI. A bundled-UI replacement
+> is under evaluation. Use `vless-reality` or `wireguard` for production.
+
+```bash
+# 1. Deploy (accepts the experimental warning)
+python setup.py
+
+# Select protocol 3 (hysteria2), enter VPS IP, choose ports.
+# An obfuscation password is auto-generated.
+
+# 2. Retrieve your credentials from .env:
+cat .env | grep -E "HYSTERIA|ADMIN_PASSWORD"
+
+# 3. The container exposes:
+#    - UDP tunnel on HYSTERIA_PORT (default 8443)
+#    - Web UI on HYSTERIA_UI_PORT (default 8080) — if available
+
+# 4. Client setup (manual — no UI config export yet):
+#    Create a client config JSON referencing the server IP, port, and obfs password.
+#    See https://hysteria.network/docs/ for config syntax.
+```
+
+**Troubleshooting:** This protocol is not production-ready. Check back after a bundled-UI image is integrated.
+
+---
+
 ## Image
 `toxxic/hysteria2:latest`
 

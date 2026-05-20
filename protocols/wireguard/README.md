@@ -1,5 +1,30 @@
 # WireGuard via wg-easy
 
+## Quick Start
+
+```bash
+# 1. Deploy the server (interactive prompts)
+python setup.py
+
+# Select protocol 1 (wireguard), enter your VPS IP, accept defaults or customize.
+# The script prints your admin password once — save it.
+
+# 2. Open the management UI in your browser
+#    http://<YOUR_VPS_IP>:51821
+#    Password: (printed by setup.py)
+
+# 3. In the Web UI, click "New Client", name it, download the .conf file
+#    or scan the QR code with your WireGuard app.
+
+# 4. Install a client and connect:
+#    - Windows/macOS/Linux: https://www.wireguard.com/install/
+#    - iOS/Android: WireGuard from the App Store / Google Play
+```
+
+**Troubleshooting:** If the Web UI doesn't load, wait 10s for the container to start, then run `python setup.py --verify-image`.
+
+---
+
 ## Image
 `ghcr.io/wg-easy/wg-easy:14`
 
